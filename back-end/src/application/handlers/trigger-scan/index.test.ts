@@ -28,12 +28,14 @@ test('trigger scan event success', async () => {
   // assert
   expect(scanEvent?.id).toBe(1);
   expect(scanEvent?.repoName).toBe('repository name');
-  expect(new Date(scanEvent?.createdAt ?? '').getTime()).toBeGreaterThanOrEqual(startedAt);
-  expect(new Date(scanEvent?.createdAt ?? '').getTime()).toBeLessThanOrEqual(endedAt);
+  expect(scanEvent?.status).toBe('Queued');
+  expect(scanEvent?.createdAt.getTime()).toBeGreaterThanOrEqual(startedAt);
+  expect(scanEvent?.createdAt.getTime()).toBeLessThanOrEqual(endedAt);
   expect(scanEvent?.startedAt).toBeNull();
   expect(scanEvent?.finishedAt).toBeNull();
 
   expect(result.id).toBe(scanEvent?.id);
   expect(result.repoName).toBe(scanEvent?.repoName);
-  expect(result.createdAt).toBe(new Date(scanEvent?.createdAt ?? '').getTime());
+  expect(result.status).toBe(scanEvent?.status);
+  expect(result.createdAt).toBe(scanEvent?.createdAt.getTime());
 });

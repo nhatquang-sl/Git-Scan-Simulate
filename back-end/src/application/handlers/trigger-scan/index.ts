@@ -12,12 +12,14 @@ import { ScanEvent } from '@database';
 export class TriggerScanEventResult {
   id: number;
   repoName: string;
+  status: string;
   createdAt: number;
 
   constructor(entity: ScanEvent) {
     this.id = entity.id;
     this.repoName = entity.repoName;
-    this.createdAt = new Date(entity.createdAt).getTime();
+    this.status = entity.status;
+    this.createdAt = entity.createdAt.getTime();
   }
 }
 

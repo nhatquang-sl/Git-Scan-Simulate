@@ -11,10 +11,10 @@ import dbContext from '../db-context';
 class ScanEvent extends Model<InferAttributes<ScanEvent>, InferCreationAttributes<ScanEvent>> {
   declare id: CreationOptional<number>;
   declare repoName: string;
-  declare status: 'Queued' | 'In Progress' | 'Success' | 'Failure';
-  declare startedAt: CreationOptional<string>;
-  declare finishedAt: CreationOptional<string>;
-  declare createdAt: CreationOptional<string>;
+  status: 'Queued' | 'In Progress' | 'Success' | 'Failure' = 'Queued';
+  declare startedAt: CreationOptional<Date>;
+  declare finishedAt: CreationOptional<Date>;
+  declare createdAt: CreationOptional<Date>;
 }
 
 // https://sequelize.org/docs/v6/core-concepts/model-basics/#data-types
