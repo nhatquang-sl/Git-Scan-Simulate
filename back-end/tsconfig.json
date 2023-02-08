@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "rootDir": "./",
+    "baseUrl": "./src",
+    "paths": {
+      "@config": ["config"],
+      "@config/*": ["config/*"],
+      "@application/*": ["application/*"],
+      "@database": ["database"],
+      "@services/*": ["services/*"],
+      "@libs/*": ["../../front-end/src/shared/*"]
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  }
+}
