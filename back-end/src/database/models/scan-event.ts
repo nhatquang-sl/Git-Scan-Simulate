@@ -14,6 +14,7 @@ class ScanEvent extends Model<InferAttributes<ScanEvent>, InferCreationAttribute
   declare status: 'Queued' | 'In Progress' | 'Success' | 'Failure';
   declare startedAt: CreationOptional<string>;
   declare finishedAt: CreationOptional<string>;
+  declare createdAt: CreationOptional<string>;
 }
 
 // https://sequelize.org/docs/v6/core-concepts/model-basics/#data-types
@@ -34,6 +35,9 @@ ScanEvent.init(
       type: DataTypes.DATE,
     },
     finishedAt: {
+      type: DataTypes.DATE,
+    },
+    createdAt: {
       type: DataTypes.DATE,
     },
   },
