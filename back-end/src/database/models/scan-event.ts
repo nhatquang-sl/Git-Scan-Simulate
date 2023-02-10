@@ -11,7 +11,7 @@ import dbContext from '../db-context';
 class ScanEvent extends Model<InferAttributes<ScanEvent>, InferCreationAttributes<ScanEvent>> {
   declare id: CreationOptional<number>;
   declare repoName: string;
-  status: 'Queued' | 'In Progress' | 'Success' | 'Failure' = 'Queued';
+  declare status: 'Queued' | 'In Progress' | 'Success' | 'Failure';
   declare startedAt: CreationOptional<Date>;
   declare finishedAt: CreationOptional<Date>;
   declare createdAt: CreationOptional<Date>;
@@ -30,6 +30,7 @@ ScanEvent.init(
     },
     status: {
       type: DataTypes.STRING,
+      defaultValue: 'Queued',
     },
     startedAt: {
       type: DataTypes.DATE,
