@@ -9,17 +9,6 @@ import {
 } from '@application/mediator';
 import ScanService from '@application/services/scan-service';
 
-export class ScanAnEventResult {
-  id: number;
-  eventId: number;
-  vulnerabilities: Vulnerability[];
-  constructor(entity: ScanResult) {
-    this.id = entity.id;
-    this.eventId = entity.eventId;
-    this.vulnerabilities = entity.vulnerabilities?.sort((a, b) => a.id - b.id) ?? [];
-  }
-}
-
 export class ScanAnEventCommand implements ICommand {
   eventId: number;
 
@@ -29,10 +18,8 @@ export class ScanAnEventCommand implements ICommand {
 }
 
 @RegisterHandler
-export class ScanAnEventCommandHandler
-  implements ICommandHandler<ScanAnEventCommand, ScanAnEventResult>
-{
-  async handle(command: ScanAnEventCommand): Promise<ScanAnEventResult> {
+export class ScanAnEventCommandHandler implements ICommandHandler<ScanAnEventCommand, number> {
+  async handle(command: ScanAnEventCommand): Promise<number> {
     const { eventId } = command;
 
     const entity = await ScanEvent.findOne({ where: { id: eventId, status: 'Queued' } });
@@ -53,27 +40,24 @@ export class ScanAnEventCommandHandler
   /**
    * there is no vulnerability
    * @param eventId
-   * @returns
+   * @returns scan result id
    */
-  async handleSuccess(eventId: number): Promise<ScanAnEventResult> {
+  async handleSuccess(eventId: number): Promise<number> {
     const [scanResult] = await Promise.all([
       ScanResult.create({ eventId }),
       ScanEvent.update({ status: 'Success', finishedAt: new Date() }, { where: { id: eventId } }),
     ]);
 
-    return new ScanAnEventResult(scanResult);
+    return scanResult.id;
   }
 
   /**
    *
    * @param eventId
    * @param vulnerabilities
-   * @returns
+   * @returns scan result id
    */
-  async handleFailure(
-    eventId: number,
-    vulnerabilities: Vulnerability[]
-  ): Promise<ScanAnEventResult> {
+  async handleFailure(eventId: number, vulnerabilities: Vulnerability[]): Promise<number> {
     const [scanResult] = await Promise.all([
       ScanResult.create({ eventId, vulnerabilities } as ScanResult, {
         include: [{ model: Vulnerability, as: 'vulnerabilities' }],
@@ -81,7 +65,7 @@ export class ScanAnEventCommandHandler
       ScanEvent.update({ status: 'Failure', finishedAt: new Date() }, { where: { id: eventId } }),
     ]);
 
-    return new ScanAnEventResult(scanResult);
+    return scanResult.id;
   }
 }
 

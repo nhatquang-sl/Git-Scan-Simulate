@@ -1,10 +1,9 @@
-import { ScanAnEventResult } from './index';
 import { dbContext, initializeDb, ScanResult, Vulnerability, ScanEvent } from '@database';
 import { mediator } from '@application/mediator';
-import { TriggerScanEventCommand, TriggerScanEventResult } from '../trigger-scan';
-import { ScanAnEventCommand } from '.';
 import { BadRequestError, NotFoundError } from '@application/common/exceptions';
 import ScanService from '@application/services/scan-service';
+import { TriggerScanEventCommand, TriggerScanEventResult } from '../trigger-scan';
+import { ScanAnEventCommand } from '.';
 jest.mock('@application/services/scan-service');
 
 const vulnerabilities: Vulnerability[] = [
@@ -44,10 +43,10 @@ test('scan an event success', async () => {
   let command = new TriggerScanEventCommand('repository name');
   const scanEvent = (await mediator.send(command)) as TriggerScanEventResult;
 
-  const result = (await mediator.send(new ScanAnEventCommand(scanEvent.id))) as ScanAnEventResult;
+  const scanResultId = (await mediator.send(new ScanAnEventCommand(scanEvent.id))) as number;
 
   const scanResult = await ScanResult.findOne({
-    where: { id: 1 },
+    where: { id: scanResultId },
     include: [
       { model: Vulnerability, as: 'vulnerabilities' },
       { model: ScanEvent, as: 'event' },
@@ -75,10 +74,10 @@ test('scan an event failure', async () => {
   let command = new TriggerScanEventCommand('repository name');
   const scanEvent = (await mediator.send(command)) as TriggerScanEventResult;
 
-  const result = (await mediator.send(new ScanAnEventCommand(scanEvent.id))) as ScanAnEventResult;
+  const scanResultId = (await mediator.send(new ScanAnEventCommand(scanEvent.id))) as number;
 
   const scanResult = await ScanResult.findOne({
-    where: { id: 1 },
+    where: { id: scanResultId },
     include: [
       { model: Vulnerability, as: 'vulnerabilities' },
       { model: ScanEvent, as: 'event' },
@@ -101,7 +100,7 @@ test('scan an event failure', async () => {
   );
 
   // assert vulnerabilities
-  expect(scanResult?.vulnerabilities?.length).toBe(result.vulnerabilities.length);
+  expect(scanResult?.vulnerabilities?.length).toBe(vulnerabilities.length);
   const scanVulnerabilities = scanResult?.vulnerabilities ?? [];
   expect(scanVulnerabilities[0].type).toEqual('sast');
   expect(scanVulnerabilities[0].path).toEqual(vulnerabilities[0].path);
