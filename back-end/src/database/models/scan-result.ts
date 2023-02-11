@@ -19,7 +19,7 @@ class ScanResult extends Model<
 > {
   declare id: CreationOptional<number>;
   declare eventId: ForeignKey<ScanEvent['id']>;
-  declare event?: NonAttribute<ScanEvent>;
+  declare event: NonAttribute<ScanEvent>;
   declare vulnerabilities?: NonAttribute<Vulnerability[]>;
   declare static associations: {
     vulnerabilities: Association<ScanResult, Vulnerability>;
