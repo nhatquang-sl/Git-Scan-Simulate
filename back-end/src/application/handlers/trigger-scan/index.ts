@@ -1,3 +1,5 @@
+import ENV from '@config';
+import { ScanEvent } from '@database';
 import { BadRequestError } from '@application/common/exceptions';
 import {
   RegisterHandler,
@@ -5,9 +7,8 @@ import {
   ICommand,
   RegisterValidator,
   ICommandValidator,
+  RegisterCacheCommand,
 } from '@application/mediator';
-
-import { ScanEvent } from '@database';
 
 export class TriggerScanEventResult {
   id: number;
@@ -23,6 +24,7 @@ export class TriggerScanEventResult {
   }
 }
 
+@RegisterCacheCommand(ENV.SCAN_EVENT_MAX_WAIT_SECOND)
 export class TriggerScanEventCommand implements ICommand {
   repoName: string;
   constructor(repoName: string) {

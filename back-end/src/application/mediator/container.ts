@@ -3,6 +3,7 @@ import { IContainer } from './interfaces';
 export const container: IContainer = {
   handlers: {},
   validators: {},
+  cacheCommands: {},
 };
 
 // https://www.typescriptlang.org/docs/handbook/decorators.html#class-decorators
@@ -27,5 +28,12 @@ export function Authorize(roles: string[] = []) {
     const handlerName = constructor.name.toString();
     if (handlerName) container.handlers[handlerName] = constructor;
     constructor.prototype.authorizeRoles = roles;
+  };
+}
+
+export function RegisterCacheCommand(ttlSeconds: number) {
+  return function (constructor: Function) {
+    const commandName = constructor.name.toString();
+    if (commandName) container.cacheCommands[commandName] = ttlSeconds;
   };
 }

@@ -7,12 +7,14 @@ import { dbContext, initializeDb } from '@database';
 
 import scanRoute from 'controllers/scan-route';
 import ScanEventWorker from 'workers/scan-event-worker';
+import { mediator } from '@application/mediator';
 import {
   BadRequestError,
   ConflictError,
   NotFoundError,
   UnauthorizedError,
 } from '@application/common/exceptions';
+import { CachingBehavior } from '@application/common/behaviors/caching';
 
 console.log(ENV);
 
@@ -61,6 +63,7 @@ app.use(errorLogger);
 
 dbContext.connect().then(async () => {
   await initializeDb();
+  mediator.addPipelineBehavior(new CachingBehavior());
   app.listen(ENV.PORT, () => console.log(`Server running on port ${ENV.PORT}`));
   new ScanEventWorker().run();
 });

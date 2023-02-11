@@ -19,6 +19,7 @@ export interface ICommandValidator<T extends ICommand> {
 export interface IContainer {
   readonly handlers: { [id: string]: Function };
   readonly validators: { [id: string]: Function };
+  readonly cacheCommands: { [id: string]: number };
 }
 
 export interface IPipelineBehavior {
