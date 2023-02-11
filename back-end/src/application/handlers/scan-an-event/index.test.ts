@@ -2,8 +2,8 @@ import { dbContext, initializeDb, ScanResult, Vulnerability, ScanEvent } from '@
 import { mediator } from '@application/mediator';
 import { BadRequestError, NotFoundError } from '@application/common/exceptions';
 import ScanService from '@application/services/scan-service';
-import { TriggerScanEventCommand, TriggerScanEventResult } from '../trigger-scan';
 import { ScanAnEventCommand } from '.';
+
 jest.mock('@application/services/scan-service');
 
 const vulnerabilities: Vulnerability[] = [
@@ -40,8 +40,9 @@ test('scan an event notfound', async () => {
 
 test('scan an event success', async () => {
   mockScanService([]);
-  let command = new TriggerScanEventCommand('repository name');
-  const scanEvent = (await mediator.send(command)) as TriggerScanEventResult;
+  const scanEvent = await ScanEvent.create({
+    repoName: 'repository name',
+  } as ScanEvent);
 
   const scanResultId = (await mediator.send(new ScanAnEventCommand(scanEvent.id))) as number;
 
@@ -71,8 +72,9 @@ test('scan an event success', async () => {
 
 test('scan an event failure', async () => {
   mockScanService(vulnerabilities);
-  let command = new TriggerScanEventCommand('repository name');
-  const scanEvent = (await mediator.send(command)) as TriggerScanEventResult;
+  const scanEvent = await ScanEvent.create({
+    repoName: 'repository name',
+  } as ScanEvent);
 
   const scanResultId = (await mediator.send(new ScanAnEventCommand(scanEvent.id))) as number;
 
