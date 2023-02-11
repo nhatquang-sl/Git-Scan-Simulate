@@ -1,0 +1,62 @@
+{
+	"info": {
+		"_postman_id": "3680bded-dd57-43bf-b0af-f9b51fddb401",
+		"name": "GitScanSimulate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1175497"
+	},
+	"item": [
+		{
+			"name": "Trigger Scan",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3600/scan/:reponame",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3600",
+					"path": [
+						"scan",
+						":reponame"
+					],
+					"variable": [
+						{
+							"key": "reponame",
+							"value": "my repo name"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Scan Result",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3600/scan/:eventId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3600",
+					"path": [
+						"scan",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
