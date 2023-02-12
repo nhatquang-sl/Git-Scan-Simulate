@@ -1,12 +1,4 @@
 export interface ICommand {}
-export class AuthorizeCommand implements ICommand {
-  constructor(accessToken: string) {
-    this.accessToken = accessToken;
-  }
-  declare userId: number;
-  declare accessToken: string;
-  declare accessTokenType: string;
-}
 export type Result = void | string | {};
 export interface ICommandHandler<T extends ICommand, Result> {
   handle: (command: T) => Promise<Result>;
